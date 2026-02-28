@@ -58,6 +58,7 @@ jobs:
         draft: false
         prerelease: false
 
+
 ################################################################
 ###                  BUILD DOCKER IMAGE                      ###
 ###         Build Docker image from the Dockefile            ###
