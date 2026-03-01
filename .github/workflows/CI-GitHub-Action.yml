@@ -56,10 +56,12 @@ jobs:
         release_name: Release ${{ steps.next_version.outputs.tag }}
         draft: false
         prerelease: false
+        
 ################################################################
 ###                  BUILD DOCKER IMAGE                      ###
 ###         Build Docker image from the Dockefile            ###
 ################################################################
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
