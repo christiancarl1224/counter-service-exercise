@@ -107,6 +107,35 @@ jobs:
         # Push the latest tag
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
+    - name: Deploy to ha-proxy
+      env:
+        ha-proxy_PEM_KEY: ${{ secrets.ha-proxy_PEM_KEY }}
+        ha-proxy_HOST: ${{ secrets.ha-proxy_HOST }}
+        ha-proxy_USER: ${{ secrets.ha-proxy_USER }}
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: counter-service-dev
+        IMAGE_TAG: ${{ steps.next_version.outputs.tag }}
+      run: |
+        # Save PEM key to file and set permissions
+        echo "$ha-proxy_PEM_KEY" > ha-proxy.pem
+        chmod 400 ha-proxy.pem
+
+        # SSH, SCP commands
+        SSH_COMMAND="ssh -i ha-proxy.pem -o StrictHostKeyChecking=no $ha-proxy_USER@$ha-proxy_HOST"
+        SCP_COMMAND="scp -i ha-proxy.pem -o StrictHostKeyChecking=no"
+
+        #Login to Docker registry
+        $SSH_COMMAND "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY"
+        
+        # Copy docker-compose.yml to ha-proxy server
+        $SCP_COMMAND docker-compose.yml $ha-proxy_USER@$ha-proxy_HOST:/home/ubuntu/docker/
+        
+        # Pull and run the Docker container on ha-proxy
+        $SSH_COMMAND "cd /home/ubuntu/docker/ && docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG && docker compose -f docker-compose.yml up -d --force-recreate"
+        
+        # Cleanup PEM key
+        rm -f ha-proxy.pem
+
 ################################################################
 ###               SONAR CLOUD SCAN                           ###
 ### Drops the build if any bugs or vulnerabilities are found.###
