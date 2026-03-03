@@ -117,7 +117,7 @@ jobs:
         IMAGE_TAG: ${{ steps.next_version.outputs.tag }}
       run: |
         # Save PEM key to file and set permissions
-        echo "$EC2_PEM_KEY" > ha-proxy.pem
+        echo -e "$EC2_PEM_KEY" > ha-proxy.pem
         chmod 400 ha-proxy.pem
 
         # SSH, SCP commands
