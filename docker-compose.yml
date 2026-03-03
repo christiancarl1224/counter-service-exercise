@@ -3,7 +3,6 @@ services:
   counter-service:
     container_name: counter-service-exercise
     image: 039817790672.dkr.ecr.us-east-1.amazonaws.com/counter-service-exercise:latest
-    039817790672.dkr.ecr.us-east-1.amazonaws.com/counter-service-exercise
     volumes:
       - ./data:/data
     ports:
