@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-ARG PYTHON_VERSION=3.13.0a4
+# ARG PYTHON_VERSION=3.13.0a4
+ARG PYTHON_VERSION=3.11-slim
 # FROM python:${PYTHON_VERSION}-alpine3.19 as base
 FROM python:3.11-slim
 
