@@ -6,7 +6,6 @@
 ARG PYTHON_VERSION=3.12
 FROM python:${PYTHON_VERSION}-alpine3.19 as base
 
-
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
 
